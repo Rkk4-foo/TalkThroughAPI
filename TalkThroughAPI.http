@@ -1,0 +1,6 @@
+@TalkThroughAPI_HostAddress = http://localhost:5147
+
+GET {{TalkThroughAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

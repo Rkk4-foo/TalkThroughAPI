@@ -3,13 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TalkThroughAPI.Models
 {
+    [PrimaryKey(nameof(UserSenderId),nameof(UserReceiverId))]
     public class Friends
     {
-        [Key]
-        public User UserSender { get; set; }
+        public string UserSenderId { get; set; }
 
-        public User Receiver { get; set; }
+        public string UserReceiverId { get; set; }
 
         public bool RequestAccepted { get; set; }
+
+        public required User UserSender {  get; set; }
+
+        public required User UserReceiver { get; set; }
     }
 }

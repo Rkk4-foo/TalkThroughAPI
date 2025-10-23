@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TalkThroughAPI.Models
 {
+    [PrimaryKey(nameof(MessageId))]
     public class Messages
     {
-        [Key,Column(TypeName = "Varchar2(40)")]
+        [Column(TypeName = "Varchar2(40)")]
         public required string MessageId { get; set; }
-        public string MessageContent { get; set; }
-        [Column(TypeName = "TimeStamp")]
-        public TimeSpan MessageSentTime { get; set; }        
+        public string MessageContent { get; set; } 
+        public DateTime MessageSentTime { get; set; }        
         public IList<MessagesChats> MessagesChats {  get; set; }
 
     }

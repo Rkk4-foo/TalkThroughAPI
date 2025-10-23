@@ -2,12 +2,12 @@
 
 namespace TalkThroughAPI.Models
 {
-    [PrimaryKey("CommunityId")]
+    [PrimaryKey(nameof(CommunityId)]
     public class Communities
     {  
         public required string CommunityId { get; set; }
         public required string CommunityName {get; set;}
         public byte[]? ComunnityPicture { get; set; }
-        public required IList<CommunitiesChats> CommunitiesChats { get; set; }
+       
     }
 }

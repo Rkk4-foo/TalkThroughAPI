@@ -26,8 +26,8 @@ namespace TalkThroughAPI.Models
             Desconectado = 0
         }
 
-        public  IList<ChatsUser> ChatsUser { get; set; }
-
+        
+        public ICollection<Chat> Chats { get; set; }
         public IList<UsersCalls> UsersCalls { get; set; }
     }
 }

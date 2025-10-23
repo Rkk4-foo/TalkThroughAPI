@@ -24,10 +24,6 @@ namespace TalkThroughAPI.Models
             Ausente = 2,
             NoMolestar = 3,
             Desconectado = 0
-        }
-
         
-        public ICollection<Chat> Chats { get; set; }
-        public IList<UsersCalls> UsersCalls { get; set; }
     }
 }

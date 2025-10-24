@@ -7,16 +7,14 @@ namespace TalkThroughAPI.Models
     [PrimaryKey(nameof(Id))]
     public class User
     {
-
+        [Column(TypeName = "Varchar(40)")]
         public required string Id { get; set; }
         public required string UserName { get; set; }
         public string? DisplayName { get; set; }
         public required string Password { get; set; }
         [Column(TypeName = "VARBINARY(MAX)")]
-        public required byte[] UserProfilePicture { get; set; }
-        [Column(TypeName = "TimeStamp")]
+        public required byte[]? UserProfilePicture { get; set; }
         public required DateTime AccountCreationDate { get; set; }
-        [Column(TypeName = "TimeStamp")]
         public required DateTime LastLoginTime { get; set; }
         public enum UserStatus
         {

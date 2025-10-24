@@ -7,9 +7,9 @@ namespace TalkThroughAPI.Models
     public class UsersCalls
     {
 
-        [Column(TypeName = "Varchar2(40)"),ForeignKey("Calls")]
+        [Column(TypeName = "Varchar(40)"),ForeignKey("Calls")]
         public required string CallId { get; set; }
-        [Column(TypeName = "Varchar2(40)"),ForeignKey("Users")]
+        [Column(TypeName = "Varchar(40)"),ForeignKey("Users")]
         public required string UserId { get; set; }
 
         public Call Calls { get; set; }

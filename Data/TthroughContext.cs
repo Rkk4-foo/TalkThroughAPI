@@ -28,13 +28,13 @@ namespace TalkThroughAPI.Data
                 .HasOne(f => f.UserSender)
                 .WithMany() 
                 .HasForeignKey(f => f.UserSenderId)
-                .OnDelete(DeleteBehavior.Restrict); // o Cascade, SetNull
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Friends>()
                 .HasOne(f => f.UserReceiver)
-                .WithMany() // o .WithMany(u => u.PeticionesRecibidas)
+                .WithMany() 
                 .HasForeignKey(f => f.UserReceiverId)
-                .OnDelete(DeleteBehavior.Restrict); // Esto evita eliminación en cascada circular
+                .OnDelete(DeleteBehavior.Restrict); 
         }
     }
 }

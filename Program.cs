@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TalkThroughAPI.Data;
+using TalkThroughAPI.Services;
+using TalkThroughAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<TthroughContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TalkthroughDatabase")));
 
+builder.Services.AddScoped<IUserService, UserService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

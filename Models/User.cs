@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TalkThroughAPI.Models
 {
@@ -11,11 +12,12 @@ namespace TalkThroughAPI.Models
         public required string Id { get; set; }
         public required string UserName { get; set; }
         public string? DisplayName { get; set; }
-        public required string Password { get; set; }
+        [JsonIgnore]
+        public  string Password { get; set; }
         [Column(TypeName = "VARBINARY(MAX)")]
         public required byte[]? UserProfilePicture { get; set; }
         public required DateTime AccountCreationDate { get; set; }
-        public required DateTime LastLoginTime { get; set; }
+        public DateTime LastLoginTime { get; set; }
         public enum UserStatus
         {
             Conectado = 1,

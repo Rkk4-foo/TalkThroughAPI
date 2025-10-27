@@ -1,14 +1,15 @@
 ﻿using System.Drawing;
-using TalkThroughAPI.Models;
+using TalkThroughAPI.DTO;
+
 
 namespace TalkThroughAPI.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task<List<User>> GetAllUsers();
+        public  Task<List<DTO.UserDTO>> GetAllUsers();
 
-        public Task<User> GetUserById(string id);
+        public Task<DTO.UserDTO> GetUserById(string id);
 
-        public void UserRegister(string username, string pwd,Image defaultUserImage);
+        public Task<UserDTO> UserRegister(CreateUserDTO userDTO);
     }
 }

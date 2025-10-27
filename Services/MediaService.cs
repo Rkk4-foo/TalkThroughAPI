@@ -5,13 +5,17 @@ namespace TalkThroughAPI.Services
 {
     public class MediaService : IMediaService
     {
-        public byte[] ImageToByteArray(Image imageIn)
+        public byte[] GetDefaultImageBytes(string path)
         {
+            //if (!File.Exists(path))
+            //    throw new FileNotFoundException($"Imagen predeterminada no encontrada: {path}");
 
-            using var ms = new MemoryStream();
-            imageIn.Save(ms, imageIn.RawFormat);
-            return ms.ToArray();
+            return File.ReadAllBytes(path);
+        }
 
+        public byte[] Base64ToByteArray(string base64)
+        {
+            return Convert.FromBase64String(base64);
         }
     }
 }

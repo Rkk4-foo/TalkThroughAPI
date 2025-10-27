@@ -15,7 +15,7 @@ namespace TalkThroughAPI.Models
         [JsonIgnore]
         public  string Password { get; set; }
         [Column(TypeName = "VARBINARY(MAX)")]
-        public required byte[]? UserProfilePicture { get; set; }
+        public byte[]? UserProfilePicture { get; set; }
         public required DateTime AccountCreationDate { get; set; }
         public DateTime LastLoginTime { get; set; }
         public enum UserStatus

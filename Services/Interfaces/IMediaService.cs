@@ -3,7 +3,7 @@
     public interface IMediaService
     {
 
-        public byte[] ImageToByteArray(System.Drawing.Image imageIn);
-        
+        public byte[] GetDefaultImageBytes(string path);
+        public byte[] Base64ToByteArray(string base64);
     }
 }

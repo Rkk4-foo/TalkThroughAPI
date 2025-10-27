@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen();
 
+builder.Environment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 builder.Services.AddDbContext<TthroughContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TalkthroughDatabase")));
 
@@ -25,6 +25,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

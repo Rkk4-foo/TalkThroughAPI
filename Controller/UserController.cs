@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TalkThroughAPI.DTO;
 
 
 namespace TalkThroughAPI.Controller
@@ -30,7 +31,19 @@ namespace TalkThroughAPI.Controller
             return Ok(user);        
         }
 
-        [HttpPost]
+        [HttpPost("RegisterUser")]
+        public async Task<IActionResult> RegisterUser([FromBody] CreateUserDTO dto) 
+        {
+            try
+            {
+                var user = await _userService.UserRegister(dto);
+                return Ok(user);
+            }
+            catch (Exception ex) 
+            { 
+                return BadRequest(new {message = ex.Message});        
+            }
+        }
 
 
     }

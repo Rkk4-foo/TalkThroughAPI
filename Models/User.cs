@@ -26,5 +26,7 @@ namespace TalkThroughAPI.Models
             Desconectado = 0
 
         }
+
+        public string Salt { get; set; }
     }
 }

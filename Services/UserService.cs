@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using System.Security.Cryptography;
@@ -13,11 +14,12 @@ namespace TalkThroughAPI.Services
     {
         private readonly Data.TthroughContext  _context;
         private readonly IWebHostEnvironment _env;
-
-        public UserService (Data.TthroughContext context, IWebHostEnvironment env) 
+        private readonly IJwtService _jwt;
+        public UserService (Data.TthroughContext context, IWebHostEnvironment env, IJwtService jwt) 
         {
             _context = context;
             _env = env;
+            _jwt = jwt;
         }
 
         public Task<List<UserDTO>> GetAllUsers()
@@ -43,6 +45,12 @@ namespace TalkThroughAPI.Services
                 DisplayName = user.DisplayName,
                 CreationDate = user.AccountCreationDate
             };
+        }
+
+        public async Task<string> LoginUser(string username, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u=>u.UserName == username);
+
         }
 
         public async Task<UserDTO> UserRegister(CreateUserDTO userDTO)
@@ -73,9 +81,10 @@ namespace TalkThroughAPI.Services
             
         }
 
-        private string HashPwd(string pwd) 
+        private (string hash, string salt) HashPwd(string pwd) 
         {
             byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
+            string saltBase64 = Convert.ToBase64String(salt);
 
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: pwd,
@@ -84,7 +93,12 @@ namespace TalkThroughAPI.Services
             iterationCount: 100000,
             numBytesRequested: 256 / 8));
 
-            return hashed;
+            return (hashed,saltBase64);
+        }
+
+        private bool VerifyPassword(string pwd, string expectedpwd) 
+        {
+            
         }
     }
 }

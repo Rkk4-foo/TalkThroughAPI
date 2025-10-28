@@ -9,10 +9,11 @@ namespace TalkThroughAPI.DTO
         public DateTime CreationDate { get; set; }
     }
 
-    public class CreateUserDTO 
+    public class LoginRegisterUserDTO 
     {
         public string UserName { get; set; }
         public string Password { get; set; }
         
     }
+
 }

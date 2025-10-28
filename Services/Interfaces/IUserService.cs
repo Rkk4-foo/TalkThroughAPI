@@ -10,8 +10,8 @@ namespace TalkThroughAPI.Services.Interfaces
 
         public Task<DTO.UserDTO> GetUserById(string id);
 
-        public Task<UserDTO> UserRegister(CreateUserDTO userDTO);
+        public Task<UserDTO> UserRegister(LoginRegisterUserDTO userDTO);
 
-        public Task<string> LoginUser(string username, string password);
+        public Task<string> LoginUser(LoginRegisterUserDTO loginDTO);
     }
 }

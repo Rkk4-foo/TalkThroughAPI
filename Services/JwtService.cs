@@ -8,31 +8,45 @@ namespace TalkThroughAPI.Services
     public class JwtService : Interfaces.IJwtService
     {
         private readonly string _apiKey;
+        private readonly string _issuer;
+        private readonly string _defaultAudience;
         public JwtService(IConfiguration configuration) 
         {
-            _apiKey = configuration["Jwt:Secret"];
+            _apiKey = configuration["Jwt:Key"] ?? throw new Exception("Token key not found in configuration");
+            _issuer = configuration["Jwt:Issuer"] ?? throw new Exception("Issuer not found");
+            _defaultAudience = configuration["Jwt:DefaultAudience"] ?? throw new Exception("Audience not found or not valid");
         }
         public string GenerateToken(string userId, string username, int expireHours = 2)
         {
-            var tokenhandler = new JwtSecurityTokenHandler();
+            
 
-            var key = Encoding.UTF8.GetBytes(_apiKey);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_apiKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new[]
             {
-                Subject = new System.Security.Claims.ClaimsIdentity(new[] 
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userId),
-                    new Claim(ClaimTypes.Name, username)
-                }),
-                Expires = DateTime.UtcNow.AddHours(expireHours),
-                SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim(ClaimTypes.Name, username)
             };
 
-            var token = tokenhandler.CreateToken(tokenDescriptor);
-            return tokenhandler.WriteToken(token);
+            var token = new JwtSecurityToken 
+            (
+                issuer : _issuer,
+                audience : _defaultAudience,
+                claims : claims,
+                expires : DateTime.Now.AddHours(expireHours),
+                signingCredentials : creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
     }
 }

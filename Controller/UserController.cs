@@ -31,8 +31,8 @@ namespace TalkThroughAPI.Controller
             return Ok(user);        
         }
 
-        [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterUser([FromBody] CreateUserDTO dto) 
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterUser([FromBody] LoginRegisterUserDTO dto) 
         {
             try
             {
@@ -45,6 +45,18 @@ namespace TalkThroughAPI.Controller
             }
         }
 
-
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginRegisterUserDTO loginDTO)
+        {
+            try 
+            {
+                var user = await _userService.LoginUser(loginDTO);
+                return Ok(user);
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

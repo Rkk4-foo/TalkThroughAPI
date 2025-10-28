@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using TalkThroughAPI.Data;
 using TalkThroughAPI.Services;
 using TalkThroughAPI.Services.Interfaces;
 
+
+string[] ValidAudiences = new[] { "TalkThroughMobile", "TalkThroughWeb", "TalkThroughAdmin" };
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,12 +29,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:DefaultAudience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Secret"])),
-            ClockSkew = TimeSpan.Zero
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
 
@@ -45,6 +50,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();

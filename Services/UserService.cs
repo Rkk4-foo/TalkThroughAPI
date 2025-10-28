@@ -40,34 +40,38 @@ namespace TalkThroughAPI.Services
 
             return new UserDTO
             {
-
                 UserName = user.UserName,
                 DisplayName = user.DisplayName,
                 CreationDate = user.AccountCreationDate
             };
         }
 
-        public async Task<string> LoginUser(string username, string password)
+        public async Task<string> LoginUser(LoginRegisterUserDTO dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u=>u.UserName == username);
+            var user = _context.Users.FirstOrDefault(u => u.UserName == dto.UserName);
+            if (user == null || !VerifyPassword(dto.Password, user.Password, user.Salt))
+                throw new Exception("Usuario o contraseña incorrecto");
 
+            return _jwt.GenerateToken(user.Id, user.UserName);
+            
         }
 
-        public async Task<UserDTO> UserRegister(CreateUserDTO userDTO)
+        public async Task<UserDTO> UserRegister(LoginRegisterUserDTO userDTO)
         {
             MediaService ms = new MediaService();
 
             var defaultPicturePath = Path.Combine(_env.ContentRootPath, "wwwroot", "Images", "DefaultPicture.png");
             var pfp = ms.GetDefaultImageBytes(defaultPicturePath);
-
+            var (hash, salt) = HashPwd(userDTO.Password);
             User user = new()
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = userDTO.UserName,
                 DisplayName = userDTO.UserName,
-                Password = HashPwd(userDTO.Password),
+                Password = hash,
                 AccountCreationDate = DateTime.Now,
-                UserProfilePicture = ms.GetDefaultImageBytes(defaultPicturePath)
+                UserProfilePicture = ms.GetDefaultImageBytes(defaultPicturePath),
+                Salt = salt
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -81,7 +85,7 @@ namespace TalkThroughAPI.Services
             
         }
 
-        private (string hash, string salt) HashPwd(string pwd) 
+        private (string hashed,string salt) HashPwd(string pwd) 
         {
             byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
             string saltBase64 = Convert.ToBase64String(salt);
@@ -96,9 +100,18 @@ namespace TalkThroughAPI.Services
             return (hashed,saltBase64);
         }
 
-        private bool VerifyPassword(string pwd, string expectedpwd) 
+        private bool VerifyPassword(string pwd, string expectedpwd, string saltBase64)
         {
-            
+            byte[] storedSalt = Convert.FromBase64String(saltBase64);
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: pwd,
+            salt: storedSalt,
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 100000,
+            numBytesRequested: 256 / 8));
+
+            return hashed == expectedpwd;
         }
     }
 }

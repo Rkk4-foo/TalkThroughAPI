@@ -22,27 +22,18 @@ namespace TalkThroughAPI.Services
             _jwt = jwt;
         }
 
-        public Task<List<UserDTO>> GetAllUsers()
+        public async Task<UserDTO> GetUserAsync(string username)
         {
-            return  _context.Users
-            .Select(u => new UserDTO
-            { 
-                UserName = u.UserName,
-                DisplayName = u.DisplayName,
-                CreationDate = u.AccountCreationDate
-            })
-            .ToListAsync();
-        }
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
-        public async Task<UserDTO> GetUserById(string id)
-        {
-            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                throw new Exception("Usuario no encontrado");
 
-            return new UserDTO
+            return new UserDTO 
             {
                 UserName = user.UserName,
                 DisplayName = user.DisplayName,
-                CreationDate = user.AccountCreationDate
+                CreationDate = user.AccountCreationDate,
             };
         }
 

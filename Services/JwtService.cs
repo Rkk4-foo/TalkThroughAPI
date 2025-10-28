@@ -5,6 +5,12 @@ using System.Text;
 
 namespace TalkThroughAPI.Services
 {
+
+    /// <summary>
+    /// TODO : Adding a function to refresh tokens in order to let the user keep their session online.
+    /// Service used for anything token related inside the API. There are 3 differet audiences in production. 
+    /// For development purposes, there is a DefaultAudience in order to test the API.
+    /// </summary>
     public class JwtService : Interfaces.IJwtService
     {
         private readonly string _apiKey;

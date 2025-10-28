@@ -19,7 +19,6 @@ namespace TalkThroughAPI.Controller
         }
 
         [HttpPost("login")]
-        [Authorize]
         public async Task<IActionResult> Login([FromBody] LoginRegisterUserDTO dto)
         {
             var user = await _userService.ValidateUser(dto);

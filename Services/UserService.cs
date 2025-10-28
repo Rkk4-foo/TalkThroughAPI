@@ -73,8 +73,12 @@ namespace TalkThroughAPI.Services
                 UserProfilePicture = ms.GetDefaultImageBytes(defaultPicturePath),
                 Salt = salt
             };
+
+            if (await _context.Users.AnyAsync(u => u.UserName == user.UserName))
+                throw new Exception("This username already exists");   
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            
+             await _context.SaveChangesAsync();
 
             return new UserDTO
             {

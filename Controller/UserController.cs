@@ -45,18 +45,6 @@ namespace TalkThroughAPI.Controller
             }
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> ValidateUser([FromBody] LoginRegisterUserDTO loginDTO)
-        {
-            try 
-            {
-                var user = await _userService.ValidateUser(loginDTO);
-                return Ok(user);
-            }
-            catch(Exception ex) 
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+       
     }
 }

@@ -5,11 +5,13 @@ using System.Text.Json.Serialization;
 
 namespace TalkThroughAPI.Models
 {
-    [PrimaryKey(nameof(Id))]
+    [PrimaryKey(nameof(Id),nameof(UserName))]
     public class User
     {
         [Column(TypeName = "Varchar(40)")]
         public required string Id { get; set; }
+
+        [Column(TypeName = "Varchar(40)")]
         public required string UserName { get; set; }
         public string? DisplayName { get; set; }
         [JsonIgnore]

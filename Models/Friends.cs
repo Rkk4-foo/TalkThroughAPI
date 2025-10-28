@@ -9,9 +9,14 @@ namespace TalkThroughAPI.Models
     {
         [Column(TypeName ="Varchar(40)")]
         public string UserSenderId { get; set; }
+
         [Column(TypeName = "Varchar(40)")]
         public string UserReceiverId { get; set; }
+        [Column(TypeName = "Varchar(40)")]
+        public string UserSenderUsername { get; set; }
 
+        [Column(TypeName = "Varchar(40)")]
+        public string UserReceiverUsername { get; set; }
         public bool RequestAccepted { get; set; }
 
         public required User UserSender {  get; set; }

@@ -46,11 +46,11 @@ namespace TalkThroughAPI.Controller
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginUser([FromBody] LoginRegisterUserDTO loginDTO)
+        public async Task<IActionResult> ValidateUser([FromBody] LoginRegisterUserDTO loginDTO)
         {
             try 
             {
-                var user = await _userService.LoginUser(loginDTO);
+                var user = await _userService.ValidateUser(loginDTO);
                 return Ok(user);
             }
             catch(Exception ex) 

@@ -46,13 +46,13 @@ namespace TalkThroughAPI.Services
             };
         }
 
-        public async Task<string> LoginUser(LoginRegisterUserDTO dto)
+        public async Task<User> ValidateUser(LoginRegisterUserDTO dto)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserName == dto.UserName);
             if (user == null || !VerifyPassword(dto.Password, user.Password, user.Salt))
                 throw new Exception("Usuario o contraseña incorrecto");
 
-            return _jwt.GenerateToken(user.Id, user.UserName);
+            return user;
             
         }
 

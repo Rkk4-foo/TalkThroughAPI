@@ -28,15 +28,7 @@ namespace TalkThroughAPI.Controller
 
             
             var token = _jwtService.GenerateToken(result.Data.Id,result.Data.UserName, expireHours: 1);
-            return Ok(new Result<object>(
-                true,
-                "Login exitoso",
-                new
-                {
-                   token,
-                   expiration = DateTime.UtcNow.AddHours(1)
-                }    
-            ));
+            return StatusCode(result.StatusCode,result);
         }
     }
 }

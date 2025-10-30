@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Security.Cryptography;
 using TalkThroughAPI.DTO;
 using TalkThroughAPI.Models;
+using TalkThroughAPI.Models.Common;
 using TalkThroughAPI.Services.Interfaces;
 
 
@@ -22,32 +23,35 @@ namespace TalkThroughAPI.Services
             _jwt = jwt;
         }
 
-        public async Task<UserDTO> GetUserAsync(string username)
+        public async Task<Result<UserDTO>> GetUserAsync(string username)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
             if (user == null)
-                throw new Exception("Usuario no encontrado");
+                return new Result<UserDTO>(false, "User does not exist",null,StatusCodes.Status404NotFound);
 
-            return new UserDTO 
-            {
-                UserName = user.UserName,
-                DisplayName = user.DisplayName,
-                CreationDate = user.AccountCreationDate,
-            };
+            return new Result<UserDTO>(
+                false,
+                "User found",
+                new UserDTO
+                {
+                    UserName = user.UserName,
+                    DisplayName = user.DisplayName,
+                    CreationDate = user.AccountCreationDate,
+                });
         }
 
-        public async Task<User> ValidateUser(LoginRegisterUserDTO dto)
+        public async Task<Result<User>> ValidateUser(LoginRegisterUserDTO dto)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserName == dto.UserName);
             if (user == null || !VerifyPassword(dto.Password, user.Password, user.Salt))
-                throw new Exception("Usuario o contraseña incorrecto");
+                return new Result<User>(false, "Wrong username or password",null, StatusCodes.Status400BadRequest);
 
-            return user;
+            return new Result<User>(true, "",user);
             
         }
 
-        public async Task<UserDTO> UserRegister(LoginRegisterUserDTO userDTO)
+        public async Task<Result<UserDTO>> UserRegister(LoginRegisterUserDTO userDTO)
         {
             MediaService ms = new MediaService();
 
@@ -66,18 +70,22 @@ namespace TalkThroughAPI.Services
             };
 
             if (await _context.Users.AnyAsync(u => u.UserName == user.UserName))
-                throw new Exception("This username already exists");   
+                return new Result<UserDTO>(false,"Username already taken",null,StatusCodes.Status409Conflict);   
             _context.Users.Add(user);
             
              await _context.SaveChangesAsync();
 
-            return new UserDTO
-            {
-                UserName = userDTO.UserName,
-                DisplayName = userDTO.UserName,
-                CreationDate = DateTime.Now
-            };
-            
+            return new Result<UserDTO>(
+
+                true,
+                "User registered correctly",
+                new UserDTO 
+                {
+                    UserName = userDTO.UserName,
+                    DisplayName = userDTO.UserName,
+                    CreationDate = DateTime.Now,
+                }
+            );
         }
 
         private (string hashed,string salt) HashPwd(string pwd) 

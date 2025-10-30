@@ -19,8 +19,8 @@ namespace TalkThroughAPI.Models
         public string UserReceiverUsername { get; set; }
         public bool RequestAccepted { get; set; }
 
-        public required User UserSender {  get; set; }
+        public  User UserSender {  get; set; }
 
-        public required User UserReceiver { get; set; }
+        public User UserReceiver { get; set; }
     }
 }

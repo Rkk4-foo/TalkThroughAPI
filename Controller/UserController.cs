@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TalkThroughAPI.DTO;
+using TalkThroughAPI.Models.Common;
 
 
 namespace TalkThroughAPI.Controller
@@ -16,35 +17,26 @@ namespace TalkThroughAPI.Controller
         }
 
         [HttpGet("users")]
-        
-        public async Task<IActionResult> GetAllUsers() 
+        public async Task<IActionResult> GetUser([FromQuery] string username) 
         {
-            var users = await _userService.GetAllUsers();
-            return Ok(users);
+            var result = await _userService.GetUserAsync(username);
+            if(!result.Success)
+                return StatusCode(result.StatusCode,result);
+
+
+            return StatusCode(result.StatusCode, result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id) 
-        {
-            var user = await _userService.GetUserById(id);
-            if (user == null) return NotFound();
-            return Ok(user);        
-        }
+        
 
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] LoginRegisterUserDTO dto) 
         {
-            try
-            {
-                var user = await _userService.UserRegister(dto);
-                return Ok(user);
-            }
-            catch (Exception ex) 
-            { 
-                return BadRequest(new {message = ex.Message});        
-            }
-        }
+            var result = await _userService.UserRegister(dto);
+            if(!result.Success)
+                return StatusCode(result.StatusCode,result);
 
-       
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

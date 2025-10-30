@@ -16,6 +16,7 @@ namespace TalkThroughAPI.Services
             _context = context;
         }
 
+        
         public async Task<Result<List<FriendDTO>>> GetAllUserFriends(string userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -89,6 +90,55 @@ namespace TalkThroughAPI.Services
                         ReceiverUsername = userRequest.UserName
                     });
             }
+        }
+
+        public async Task<Result<FriendRequestDTO>> AcceptFriendRequest(string userId, string username)
+        {
+            var friendRequest = await _context.Friends
+                .FirstOrDefaultAsync(f => f.UserSenderId == userId && f.UserReceiverUsername == username);
+
+            if (friendRequest == null)
+                return new Result<FriendRequestDTO>(false, "Friend request does not exist", null, StatusCodes.Status404NotFound);
+
+            if (friendRequest.RequestAccepted)
+                return new Result<FriendRequestDTO>(false, "Friend request already accepted", null, StatusCodes.Status409Conflict);
+
+            friendRequest.RequestAccepted = true;
+            await _context.SaveChangesAsync();
+
+            return new Result<FriendRequestDTO>(
+                true, 
+                "Request Accepted", 
+                new FriendRequestDTO
+                {
+                    UserSenderId = friendRequest.UserSenderId,
+                    UserReceiverId = friendRequest.UserReceiverId,
+                    SenderUsername = friendRequest.UserSenderUsername,
+                    ReceiverUsername = friendRequest.UserReceiverUsername
+                });
+        }
+
+        public async Task<Result<FriendRequestDTO>> DenyFriendRequest(string userId, string username)
+        {
+            var friendRequest = await _context.Friends
+               .FirstOrDefaultAsync(f => f.UserSenderId == userId && f.UserReceiverUsername == username);
+
+            if (friendRequest == null)
+                return new Result<FriendRequestDTO>(false, "Friend request does not exist", null, StatusCodes.Status404NotFound);
+
+            _context.Friends.Remove(friendRequest);
+            await _context.SaveChangesAsync();
+
+            return new Result<FriendRequestDTO>(
+                true,
+                "Friend request denied",
+                new FriendRequestDTO 
+                {
+                    UserSenderId = friendRequest.UserSenderId,
+                    UserReceiverId = friendRequest.UserReceiverId,
+                    SenderUsername = friendRequest.UserSenderUsername,
+                    ReceiverUsername = friendRequest.UserReceiverUsername
+                });
         }
     }
 }

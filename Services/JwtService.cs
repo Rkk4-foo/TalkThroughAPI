@@ -40,7 +40,7 @@ namespace TalkThroughAPI.Services
                 issuer : _issuer,
                 audience : _defaultAudience,
                 claims : claims,
-                expires : DateTime.Now.AddHours(expireHours),
+                expires : DateTime.UtcNow.AddHours(expireHours),
                 signingCredentials : creds
             );
 

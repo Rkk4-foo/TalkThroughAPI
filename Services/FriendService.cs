@@ -18,7 +18,7 @@ namespace TalkThroughAPI.Services
 
         public async Task<Result<List<FriendDTO>>> GetAllUserFriends(string userId)
         {
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             var friendships = await _context.Friends
                 .Where(f => (f.UserSenderId == userId || f.UserReceiverId == userId) && f.RequestAccepted)

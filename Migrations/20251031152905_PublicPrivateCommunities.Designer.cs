@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TalkThroughAPI.Data;
 
@@ -11,9 +12,11 @@ using TalkThroughAPI.Data;
 namespace TalkThroughAPI.Migrations
 {
     [DbContext(typeof(TthroughContext))]
-    partial class TthroughContextModelSnapshot : ModelSnapshot
+    [Migration("20251031152905_PublicPrivateCommunities")]
+    partial class PublicPrivateCommunities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,9 +74,6 @@ namespace TalkThroughAPI.Migrations
                     b.Property<byte[]>("CommunityPicture")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
                     b.HasKey("CommunityId");
 
                     b.ToTable("Communities");
@@ -104,9 +104,6 @@ namespace TalkThroughAPI.Migrations
 
                     b.Property<string>("CommunityId")
                         .HasColumnType("Varchar(40)");
-
-                    b.Property<bool>("UserIsAdmin")
-                        .HasColumnType("bit");
 
                     b.HasKey("UserId", "UserName", "CommunityId");
 

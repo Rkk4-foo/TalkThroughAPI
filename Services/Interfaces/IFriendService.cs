@@ -12,5 +12,7 @@ namespace TalkThroughAPI.Services.Interfaces
         public Task<Result<FriendRequestDTO>> AcceptFriendRequest(string userId, string username);
 
         public Task<Result<FriendRequestDTO>> DenyFriendRequest (string userId, string username);
+
+        public Task<Result<FriendDTO>> RemoveFriend (string userId,string username);
     }
 }

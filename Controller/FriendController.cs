@@ -46,5 +46,45 @@ namespace TalkThroughAPI.Controller
 
             return StatusCode(result.StatusCode, result);
         }
+
+        [Authorize]
+        [HttpPut("friend-request/accept")]
+        public async Task<IActionResult> PutFriendAccept([FromBody] string username) 
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            var result = await _friendService.AcceptFriendRequest(userId, username);
+            if(!result.Success)
+                return StatusCode(result.StatusCode, result);
+
+            return StatusCode(result.StatusCode,result);
+        }
+
+        [Authorize]
+        [HttpDelete("friend-request/deny")]
+        public async Task<IActionResult> DeleteFriendRequest([FromBody] string username) 
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _friendService.DenyFriendRequest(userId, username);
+            if (!result.Success)
+                return StatusCode(result.StatusCode, result);
+
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [Authorize]
+        [HttpDelete("friend-request/remove-friend")]
+
+        public async Task<IActionResult> RemoveFriend([FromBody] string username) 
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _friendService.RemoveFriend(userId, username);
+            if (!result.Success)
+                return StatusCode(result.StatusCode, result);
+
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

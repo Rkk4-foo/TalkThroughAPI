@@ -28,7 +28,7 @@ namespace TalkThroughAPI.Controller
 
             
             var token = _jwtService.GenerateToken(result.Data.Id,result.Data.UserName, expireHours: 1);
-            return StatusCode(result.StatusCode,result);
+            return StatusCode(result.StatusCode,token);
         }
     }
 }

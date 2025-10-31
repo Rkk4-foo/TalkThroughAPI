@@ -10,6 +10,8 @@ namespace TalkThroughAPI.Models
         public required string CommunityId { get; set; }
         public required string CommunityName {get; set;}
         public byte[]? CommunityPicture { get; set; }
+
+        public bool IsPublic { get; set; }
        
     }
 }

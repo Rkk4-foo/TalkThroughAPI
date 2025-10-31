@@ -16,6 +16,7 @@ namespace TalkThroughAPI.Models
         public string UserId { get; set; }
         [Column(TypeName ="Varchar(40)")]
         public string UserName { get; set; }
+        public bool UserIsAdmin { get; set; }
         public User User { get; set; }
     }
 }

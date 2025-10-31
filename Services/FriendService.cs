@@ -53,8 +53,8 @@ namespace TalkThroughAPI.Services
 
             bool isFriendAlready = await _context.Friends
             .AnyAsync(f =>
-                f.UserSenderId == userId && f.UserReceiverId == userRequest.Id ||
-                f.UserSenderId == userRequest.Id && f.UserReceiverId == userId);
+                (f.UserSenderId == userId && f.UserReceiverId == userRequest.Id) ||
+                (f.UserSenderId == userRequest.Id && f.UserReceiverId == userId) && f.RequestAccepted);
 
             if (isFriendAlready)
                 return new Result<FriendRequestDTO>(false, "Users are already friends",null,StatusCodes.Status409Conflict);
@@ -95,7 +95,8 @@ namespace TalkThroughAPI.Services
         public async Task<Result<FriendRequestDTO>> AcceptFriendRequest(string userId, string username)
         {
             var friendRequest = await _context.Friends
-                .FirstOrDefaultAsync(f => f.UserSenderId == userId && f.UserReceiverUsername == username);
+               .FirstOrDefaultAsync(f => (f.UserSenderId == userId && f.UserReceiverUsername == username && !f.RequestAccepted)
+               || (f.UserReceiverId == userId && f.UserSenderUsername == username && !f.RequestAccepted));
 
             if (friendRequest == null)
                 return new Result<FriendRequestDTO>(false, "Friend request does not exist", null, StatusCodes.Status404NotFound);
@@ -121,7 +122,8 @@ namespace TalkThroughAPI.Services
         public async Task<Result<FriendRequestDTO>> DenyFriendRequest(string userId, string username)
         {
             var friendRequest = await _context.Friends
-               .FirstOrDefaultAsync(f => f.UserSenderId == userId && f.UserReceiverUsername == username);
+               .FirstOrDefaultAsync(f => (f.UserSenderId == userId && f.UserReceiverUsername == username && f.RequestAccepted)
+               || (f.UserReceiverId == userId && f.UserSenderUsername == username && f.RequestAccepted));
 
             if (friendRequest == null)
                 return new Result<FriendRequestDTO>(false, "Friend request does not exist", null, StatusCodes.Status404NotFound);
@@ -139,6 +141,31 @@ namespace TalkThroughAPI.Services
                     SenderUsername = friendRequest.UserSenderUsername,
                     ReceiverUsername = friendRequest.UserReceiverUsername
                 });
+        }
+
+        public async Task<Result<FriendDTO>> RemoveFriend(string userId, string username) 
+        {
+            var friendship = await _context.Friends
+                .FirstOrDefaultAsync(f => (f.UserSenderId == userId && f.UserReceiverUsername == username && f.RequestAccepted) 
+                || (f.UserReceiverId == userId && f.UserSenderUsername == username && f.RequestAccepted));
+
+            if (friendship == null)
+                return new Result<FriendDTO>(false,"Friend doesn't exist",null,StatusCodes.Status404NotFound);
+
+            _context.Friends.Remove(friendship);
+            await _context.SaveChangesAsync();
+
+            return new Result<FriendDTO>
+                (
+                    true,
+                    "Friend removed correctly",
+                    new FriendDTO
+                    {
+                        UserId = friendship.UserReceiverId,
+                        Username = friendship.UserReceiverUsername,
+                        UserAvatar = null
+                    }
+                );
         }
     }
 }

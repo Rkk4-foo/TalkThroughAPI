@@ -1,4 +1,6 @@
-﻿namespace TalkThroughAPI.DTO
+﻿using Microsoft.Identity.Client;
+
+namespace TalkThroughAPI.DTO
 {
     public class CommunityDTO
     {
@@ -10,6 +12,15 @@
     {
         public string CommunityName { get; set; }
         public bool IsPublic { get; set; }
-        public byte[] CommunityPicture { get; set; }
+    }
+
+    public class UpdatedCommunityDTO 
+    {
+        public string CommunityId { get; set; }
+        public string CommunityName { get; set; }
+
+        public byte[] UpdatedCommunityAvatar { get; set; }
+
+        public bool IsPublic { get; set; }
     }
 }

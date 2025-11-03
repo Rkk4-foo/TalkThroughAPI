@@ -7,7 +7,7 @@ namespace TalkThroughAPI.Services.Interfaces
     {
         public Task<Result<CreateCommunityDTO>> CreateCommunity(string userId,string username,CreateCommunityDTO dto);
 
-        public Task<Result<CommunityDTO>> UpdateCommunity(CommunityDTO communityDTO);
+        public Task<Result<UpdatedCommunityDTO>> UpdateCommunity(string userId,CommunityDTO communityDTO, UpdatedCommunityDTO updatedCommunityDTO);
 
         public Task<Result<CommunityDTO>> DeleteCommunity(CommunityDTO communityDTO);
     }

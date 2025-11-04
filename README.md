@@ -123,7 +123,9 @@ https://localhost:5001/swagger
 ## Autor
 
 **Desarrollado por:** Álvaro Angulo Cortés
+
 **LinkedIn:** [linkedin.com/in/álvaro-angulo-cortés-993b92337](https://www.linkedin.com/in/álvaro-angulo-cortés-993b92337)
+
 **Propósito:** Proyecto de portfolio para demostrar arquitectura backend con .NET y SignalR.
 
 ---

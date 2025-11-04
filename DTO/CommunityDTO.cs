@@ -6,6 +6,8 @@ namespace TalkThroughAPI.DTO
     {
         public string CommunityId{ get; set; }
         public string CommunityName { get; set; }
+
+        public bool IsPublic { get; set; }
     }
 
     public class CreateCommunityDTO 

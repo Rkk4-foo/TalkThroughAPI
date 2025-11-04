@@ -38,11 +38,7 @@ namespace TalkThroughAPI.Services
                 };
             }).ToList();
 
-            return new Result<List<FriendDTO>>(
-                true,
-                "Friends obtained correctly",
-                friends
-                );
+            return Result<List<FriendDTO>>.SuccessR(friends, "list of friends");
         }
 
         public async Task<Result<FriendRequestDTO>> SendFriendRequest(string userId, string username)
@@ -57,7 +53,8 @@ namespace TalkThroughAPI.Services
                 (f.UserSenderId == userRequest.Id && f.UserReceiverId == userId) && f.RequestAccepted);
 
             if (isFriendAlready)
-                return new Result<FriendRequestDTO>(false, "Users are already friends",null,StatusCodes.Status409Conflict);
+                return Result<FriendRequestDTO>.Failure("Users are already friends");
+                
             else
             {
                 var friendRequest = new FriendRequestDTO
@@ -79,16 +76,16 @@ namespace TalkThroughAPI.Services
                 });
                 await _context.SaveChangesAsync();
 
-                return new Result<FriendRequestDTO>(
-                    true,
-                    "Friend Request sent correctly",
-                    new FriendRequestDTO
-                    {
-                        UserSenderId = userId,
-                        UserReceiverId = userRequest.Id,
-                        SenderUsername = userSender.UserName,
-                        ReceiverUsername = userRequest.UserName
-                    });
+                return Result<FriendRequestDTO>.SuccessR(
+                        new FriendRequestDTO
+                        {
+                            UserSenderId = userId,
+                            UserReceiverId = userRequest.Id,
+                            SenderUsername = userSender.UserName,
+                            ReceiverUsername = userRequest.UserName
+                        },
+                        "Friend request sent"
+                    );
             }
         }
 
@@ -99,13 +96,26 @@ namespace TalkThroughAPI.Services
                || (f.UserReceiverId == userId && f.UserSenderUsername == username && !f.RequestAccepted));
 
             if (friendRequest == null)
-                return new Result<FriendRequestDTO>(false, "Friend request does not exist", null, StatusCodes.Status404NotFound);
+                return Result<FriendRequestDTO>.Failure("Friend request does not exist",default,"FRIEND_NOT_EXISTANT");
+
 
             if (friendRequest.RequestAccepted)
-                return new Result<FriendRequestDTO>(false, "Friend request already accepted", null, StatusCodes.Status409Conflict);
+                return Result<FriendRequestDTO>.Failure("Friend request already accepted", default, "FRIEND_REQUEST_CONFLICT");
+                
 
             friendRequest.RequestAccepted = true;
             await _context.SaveChangesAsync();
+
+            return Result<FriendRequestDTO>.SuccessR(
+                    new FriendRequestDTO
+                    {
+                        UserSenderId = friendRequest.UserSenderId,
+                        UserReceiverId = friendRequest.UserReceiverId,
+                        SenderUsername = friendRequest.UserSenderUsername,
+                        ReceiverUsername = friendRequest.UserReceiverUsername
+                    },
+                    "Friend request accepted"
+                );
 
             return new Result<FriendRequestDTO>(
                 true, 
@@ -150,21 +160,19 @@ namespace TalkThroughAPI.Services
                 || (f.UserReceiverId == userId && f.UserSenderUsername == username && f.RequestAccepted));
 
             if (friendship == null)
-                return new Result<FriendDTO>(false,"Friend doesn't exist",null,StatusCodes.Status404NotFound);
+                return Result<FriendDTO>.Failure("Friend does not exist", StatusCodes.Status404NotFound, "FRIEND_NON_EXISTANT");
 
             _context.Friends.Remove(friendship);
             await _context.SaveChangesAsync();
 
-            return new Result<FriendDTO>
-                (
-                    true,
-                    "Friend removed correctly",
-                    new FriendDTO
+            return Result<FriendDTO>.SuccessR(
+                    new FriendDTO 
                     {
-                        UserId = friendship.UserReceiverId,
-                        Username = friendship.UserReceiverUsername,
+                        UserId = friendship.UserSenderId == userId ? friendship.UserReceiverId : friendship.UserSenderId,
+                        Username = friendship.UserSenderId == userId ? friendship.UserReceiverUsername : friendship.UserSenderUsername,
                         UserAvatar = null
-                    }
+                    },
+                    "Friend removed"
                 );
         }
     }

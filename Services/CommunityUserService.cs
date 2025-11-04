@@ -89,6 +89,10 @@ namespace TalkThroughAPI.Services
             throw new NotImplementedException();
         }
 
+        public Task<Result<CommunityDTO>> UpdateCommunity(string userId, CommunityDTO community)
+        {
+            throw new NotImplementedException();
+        }
 
         private async Task<bool> IsAdmin(string userId,string communityId) 
         {

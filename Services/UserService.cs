@@ -28,27 +28,42 @@ namespace TalkThroughAPI.Services
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
             if (user == null)
-                return new Result<UserDTO>(false, "User does not exist",null,StatusCodes.Status404NotFound);
+                return Result<UserDTO>.Failure("User does not exist", StatusCodes.Status404NotFound);
 
-            return new Result<UserDTO>(
-                false,
-                "User found",
-                new UserDTO
-                {
-                    UserName = user.UserName,
-                    DisplayName = user.DisplayName,
-                    CreationDate = user.AccountCreationDate,
-                });
+            return Result<UserDTO>.SuccessR(
+                    new UserDTO
+                    {
+                        UserName = user.UserName,
+                        DisplayName = user.DisplayName,
+                        CreationDate = user.AccountCreationDate,
+                    },
+                    "User found"
+                );
+
+            
         }
 
-        public async Task<Result<User>> ValidateUser(LoginRegisterUserDTO dto)
+        public async Task<Result<UserDTO>> ValidateUser(LoginRegisterUserDTO dto)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserName == dto.UserName);
             if (user == null || !VerifyPassword(dto.Password, user.Password, user.Salt))
-                return new Result<User>(false, "Wrong username or password",null, StatusCodes.Status400BadRequest);
+                return Result<UserDTO>.Failure("Wrong username or password", default, "ACC_NOT_FOUND");
 
-            return new Result<User>(true, "",user);
-            
+            //    return new Result<User>(false, "Wrong username or password",null, StatusCodes.Status400BadRequest);
+
+            //return new Result<User>(true, "",user);
+
+            return Result<UserDTO>.SuccessR(
+                    
+                    new UserDTO 
+                    {
+                        UserId = user.Id,
+                        UserName = user.UserName,
+                        DisplayName = user.DisplayName,
+                        CreationDate = user.AccountCreationDate,
+                    },
+                    "Correct login"
+                );
         }
 
         public async Task<Result<UserDTO>> UserRegister(LoginRegisterUserDTO userDTO)
@@ -70,22 +85,24 @@ namespace TalkThroughAPI.Services
             };
 
             if (await _context.Users.AnyAsync(u => u.UserName == user.UserName))
-                return new Result<UserDTO>(false,"Username already taken",null,StatusCodes.Status409Conflict);   
+                return Result<UserDTO>.Failure("Username already taken", StatusCodes.Status409Conflict, "USERNAME_CONFLICT");
+
+                
             _context.Users.Add(user);
             
              await _context.SaveChangesAsync();
 
-            return new Result<UserDTO>(
+            return Result<UserDTO>.SuccessR(
+                    new UserDTO
+                    {
+                        UserName = userDTO.UserName,
+                        DisplayName = userDTO.UserName,
+                        CreationDate = DateTime.Now,
+                    },
+                    "User registered"
+                );
 
-                true,
-                "User registered correctly",
-                new UserDTO 
-                {
-                    UserName = userDTO.UserName,
-                    DisplayName = userDTO.UserName,
-                    CreationDate = DateTime.Now,
-                }
-            );
+           
         }
 
         private (string hashed,string salt) HashPwd(string pwd) 

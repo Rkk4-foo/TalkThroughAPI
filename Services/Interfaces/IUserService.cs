@@ -10,6 +10,6 @@ namespace TalkThroughAPI.Services.Interfaces
 
         public Task<Result<UserDTO>> UserRegister(LoginRegisterUserDTO userDTO);
 
-        public Task<Result<Models.User>> ValidateUser(LoginRegisterUserDTO loginDTO);
+        public Task<Result<UserDTO>> ValidateUser(LoginRegisterUserDTO loginDTO);
     }
 }

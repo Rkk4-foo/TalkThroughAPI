@@ -16,6 +16,11 @@ namespace TalkThroughAPI.Controller
             _userService = userService;
         }
 
+        /// <summary>
+        /// Gets an user
+        /// </summary>
+        /// <param name="username">User selected username</param>
+        /// <returns>Status code of the request and data of the user</returns>
         [HttpGet("users")]
         public async Task<IActionResult> GetUser([FromQuery] string username) 
         {
@@ -28,7 +33,11 @@ namespace TalkThroughAPI.Controller
         }
 
         
-
+        /// <summary>
+        /// Registers a new user in the database
+        /// </summary>
+        /// <param name="dto">New user login credentials</param>
+        /// <returns>Data of the new user</returns>
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] LoginRegisterUserDTO dto) 
         {

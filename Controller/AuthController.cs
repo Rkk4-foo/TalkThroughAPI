@@ -6,6 +6,10 @@ using TalkThroughAPI.Services.Interfaces;
 
 namespace TalkThroughAPI.Controller
 {
+
+    /// <summary>
+    /// Controller for the generation and refresh of tokens
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -19,6 +23,12 @@ namespace TalkThroughAPI.Controller
             _userService = userService;
         }
 
+
+        /// <summary>
+        /// Creates a token for the user
+        /// </summary>
+        /// <param name="dto">User credentials</param>
+        /// <returns>JWT token for user auth inside the app</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRegisterUserDTO dto)
         {
@@ -27,7 +37,7 @@ namespace TalkThroughAPI.Controller
                 return StatusCode(result.StatusCode,result);
 
             
-            var token = _jwtService.GenerateToken(result.Data.Id,result.Data.UserName, expireHours: 1);
+            var token = _jwtService.GenerateToken(result.Data.UserId,result.Data.UserName, expireHours: 1);
             return StatusCode(result.StatusCode,token);
         }
     }

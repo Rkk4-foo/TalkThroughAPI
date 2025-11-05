@@ -19,6 +19,11 @@ namespace TalkThroughAPI.Controller
             _friendService = friendService;
         }
 
+
+        /// <summary>
+        /// Gets all the friends of the user in the session
+        /// </summary>
+        /// <returns>Status code and all the parameters from the result</returns>
         [Authorize]
         [HttpGet("GetFriends")]
         public async Task<IActionResult> GetUserFriends() 
@@ -32,6 +37,11 @@ namespace TalkThroughAPI.Controller
             return StatusCode(result.StatusCode,result);
         }
 
+        /// <summary>
+        /// Sends a friend request 
+        /// </summary>
+        /// <param name="username">Username of the user the friend request is sent to</param>
+        /// <returns>Result of the friend request in a encapsulated record.</returns>
         [Authorize]
         [HttpPost("friend-request")]
 
@@ -47,6 +57,11 @@ namespace TalkThroughAPI.Controller
             return StatusCode(result.StatusCode, result);
         }
 
+        /// <summary>
+        /// Accepts a friend request
+        /// </summary>
+        /// <param name="username">Sender's username</param>
+        /// <returns>Result of the friend request with the new "RequestAccepted" parameter</returns>
         [Authorize]
         [HttpPut("friend-request/accept")]
         public async Task<IActionResult> PutFriendAccept([FromBody] string username) 
@@ -59,7 +74,11 @@ namespace TalkThroughAPI.Controller
 
             return StatusCode(result.StatusCode,result);
         }
-
+        /// <summary>
+        /// Denies a friend request
+        /// </summary>
+        /// <param name="username">Sender's username</param>
+        /// <returns>Result of the deleted friend request register</returns>
         [Authorize]
         [HttpDelete("friend-request/deny")]
         public async Task<IActionResult> DeleteFriendRequest([FromBody] string username) 
@@ -72,7 +91,11 @@ namespace TalkThroughAPI.Controller
 
             return StatusCode(result.StatusCode, result);
         }
-
+        /// <summary>
+        /// Removes user from the friend list
+        /// </summary>
+        /// <param name="username">User to remove username</param>
+        /// <returns>Details about the deleted register fom DB</returns>
         [Authorize]
         [HttpDelete("friend-request/remove-friend")]
 

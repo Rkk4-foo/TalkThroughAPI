@@ -109,14 +109,63 @@ namespace TalkThroughAPI.Services
             );
         }
 
-        public Task<Result<CommunityUserDTO>> RemoveUserFromCommunity(string userId, CommunityDTO community, UserDTO userToRemove)
+        public async Task<Result<CommunityUserDTO>> RemoveUserFromCommunity(string userId, CommunityDTO community, UserDTO userToRemove)
         {
-            throw new NotImplementedException();
+            var resultIsAdmin = await UserIsAdmin(userId, community);
+
+            if (!resultIsAdmin.Data)
+                return Result<CommunityUserDTO>.Failure("user is not admin",StatusCodes.Status401Unauthorized,"USER_NOT_ADMIN");
+
+            var user = await _context.CommunitiesUsers
+                .FirstOrDefaultAsync(cu => cu.CommunityId == community.CommunityId && cu.UserId == userToRemove.UserId);
+
+            if (user == null)
+                return Result<CommunityUserDTO>.Failure("User does not exist", StatusCodes.Status404NotFound, "USER_NOT_FOUND");
+
+            _context.CommunitiesUsers.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Result<CommunityUserDTO>.SuccessR(
+                    new CommunityUserDTO
+                    {
+                        CommunityId = community.CommunityId,
+                        CommunityName = community.CommunityName,
+                        UserId = userToRemove.UserId,
+                        Username = userToRemove.UserName
+                    },
+                    "User removed successfully"
+                );
         }
 
-        public Task<Result<CommunityDTO>> UpdateCommunity(string userId, CommunityDTO community)
+        public async Task<Result<UpdatedCommunityDTO>> UpdateCommunity(string userId, CommunityDTO community, UpdatedCommunityDTO updatedCommunity)
         {
-            throw new NotImplementedException();
+            var result = await UserIsAdmin(userId, community);
+
+            if (!result.Data)
+                return Result<UpdatedCommunityDTO>.Failure("User is admin and cannot change community parameters", StatusCodes.Status401Unauthorized, "USER_NOT_ADMIN");
+
+            var communityUser = await _context.CommunitiesUsers
+                .Include(cu => cu.Community)
+                .FirstOrDefaultAsync(cu => cu.CommunityId == community.CommunityId && cu.UserId == userId);
+
+            if(communityUser == null || communityUser.Community == null)
+                return Result<UpdatedCommunityDTO> .Failure("User not in community or data unavailable",StatusCodes.Status404NotFound,"DATA_UNAVAILABLE");
+
+            communityUser.Community.CommunityName = updatedCommunity.CommunityName;
+            communityUser.Community.CommunityPicture = updatedCommunity.UpdatedCommunityAvatar;
+            communityUser.Community.IsPublic = updatedCommunity.IsPublic;
+
+            await _context.SaveChangesAsync();
+
+            return Result<UpdatedCommunityDTO>.SuccessR(updatedCommunity, "Community updated successfully");
+
+        }
+        public async Task<Result<bool>> UserIsAdmin(string userId, CommunityDTO communityDTO)
+        {
+            var isAdmin = await _context.CommunitiesUsers
+               .AnyAsync(cu => (cu.UserId == userId && cu.CommunityId == communityDTO.CommunityId) && cu.UserIsAdmin);
+
+            return Result<bool>.SuccessR(isAdmin, "");
         }
 
         private async Task<bool> IsUserAllowedToAddAsync(string userId, CommunityDTO community)
@@ -125,12 +174,6 @@ namespace TalkThroughAPI.Services
             return result.Data || community.IsPublic;
         }
 
-        public async Task<Result<bool>> UserIsAdmin(string userId, CommunityDTO communityDTO)
-        {
-            var isAdmin = await _context.CommunitiesUsers
-               .AnyAsync(cu => (cu.UserId == userId && cu.CommunityId == communityDTO.CommunityId) && cu.UserIsAdmin);
-
-            return Result<bool>.SuccessR(isAdmin, "");
-        }
+        
     }
 }

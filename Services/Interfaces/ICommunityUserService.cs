@@ -8,7 +8,7 @@ namespace TalkThroughAPI.Services.Interfaces
         public Task<Result<CommunityUserDTO>> AddAdminToCommunity(string userId, UserDTO userToPromote, CommunityDTO community);
 
         public Task<Result<bool>> UserIsAdmin (string userId, CommunityDTO communityDTO);
-        public Task<Result<CommunityDTO>> UpdateCommunity(string userId, CommunityDTO community);
+        public Task<Result<UpdatedCommunityDTO>> UpdateCommunity(string userId, CommunityDTO community,UpdatedCommunityDTO updatedCommunity);
         public Task<Result<CommunityUserDTO>> RemoveAdminFromCommunity(string userId, CommunityDTO community,UserDTO userToDemote);
 
         public Task<Result<CommunityUserDTO>> AddUserToCommunity(string userId, CommunityDTO community, UserDTO userToAdd);

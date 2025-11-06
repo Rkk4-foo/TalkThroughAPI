@@ -26,9 +26,7 @@ namespace TalkThroughAPI.Models
             Away = 2,
             DoNotDisturb = 3,
             Disconnected = 0
-
         }
-
         public string Salt { get; set; }
     }
 }

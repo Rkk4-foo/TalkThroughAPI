@@ -1,0 +1,31 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using TalkThroughAPI.Migrations;
+
+namespace TalkThroughAPI.Models
+{
+
+    public enum Type 
+    {
+        Voice,
+        Text
+    }
+
+    [PrimaryKey(nameof(Id),nameof(CommunityId))]
+    public class Channels
+    {
+        [Column(TypeName = "varchar2(40)")]
+        public string Id { get; set; }
+
+        [Column(TypeName = "varchar2(40)")]
+        public string CommunityId { get; set; }
+
+        public string ChannelName { get; set; }
+
+        public Type ChatType { get; set; }
+
+        public Communities Community { get; set; }
+
+        public ICollection<Messages> messages { get; set; }
+    }
+}

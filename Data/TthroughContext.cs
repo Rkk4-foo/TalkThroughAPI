@@ -13,13 +13,10 @@ namespace TalkThroughAPI.Data
         public DbSet<Models.Chat> Chats{ get; set; }
         public DbSet<Models.Messages> Messages{ get; set; }
         public DbSet<Models.Communities> Communities{ get; set; }
-        public DbSet<Models.UsersChats> ChatsUsers{ get; set; }
-        public DbSet<Models.MessagesChats> MessagesChats{ get; set; }
-        public DbSet<Models.CommunitiesChats> CommunitiesChats { get; set; }
-        public DbSet<Models.Call> Calls { get; set; }
-        public DbSet<Models.UsersCalls> UsersCalls { get; set; }
         public DbSet<Models.CommunitiesUsers> CommunitiesUsers { get; set; }
         public DbSet<Models.Friends> Friends { get; set; }
+
+        public DbSet<Models.Channels> Channels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -69,39 +66,7 @@ namespace TalkThroughAPI.Data
                 .HasForeignKey(cu => cu.CommunityId)
                 .OnDelete(DeleteBehavior.NoAction);
             
-            modelBuilder.Entity<UsersCalls>()
-            .HasKey(uc => new { uc.CallId, uc.UserId, uc.UserName });
-
             
-            modelBuilder.Entity<UsersCalls>()
-                .HasOne(uc => uc.Users)
-                .WithMany() 
-                .HasForeignKey(uc => new { uc.UserId, uc.UserName }) 
-                .HasPrincipalKey(u => new { u.Id, u.UserName })
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-            modelBuilder.Entity<UsersCalls>()
-                .HasOne(uc => uc.Calls)
-                .WithMany() 
-                .HasForeignKey(uc => uc.CallId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<UsersChats>()
-                .HasKey(uch => new { uch.ChatId, uch.UserId, uch.UserName });
-
-            modelBuilder.Entity<UsersChats>()
-                .HasOne(uch => uch.User)
-                .WithMany()
-                .HasForeignKey(uch => new {uch.UserId,uch.UserName })
-                .HasPrincipalKey (u => new { u.Id,u.UserName })
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<UsersChats>()
-                .HasOne(uch => uch.Chat)
-                .WithMany()
-                .HasForeignKey(uch => uch.ChatId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -22,10 +22,10 @@ namespace TalkThroughAPI.Models
         public DateTime LastLoginTime { get; set; }
         public enum UserStatus
         {
-            Conectado = 1,
-            Ausente = 2,
-            NoMolestar = 3,
-            Desconectado = 0
+            Connected = 1,
+            Away = 2,
+            DoNotDisturb = 3,
+            Disconnected = 0
 
         }
 

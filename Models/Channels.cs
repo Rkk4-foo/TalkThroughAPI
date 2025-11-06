@@ -14,10 +14,10 @@ namespace TalkThroughAPI.Models
     [PrimaryKey(nameof(Id),nameof(CommunityId))]
     public class Channels
     {
-        [Column(TypeName = "varchar2(40)")]
+        [Column(TypeName = "varchar(40)")]
         public string Id { get; set; }
 
-        [Column(TypeName = "varchar2(40)")]
+        [Column(TypeName = "varchar(40)")]
         public string CommunityId { get; set; }
 
         public string ChannelName { get; set; }

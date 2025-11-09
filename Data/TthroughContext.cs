@@ -16,6 +16,7 @@ namespace TalkThroughAPI.Data
         public DbSet<Models.CommunitiesUsers> CommunitiesUsers { get; set; }
         public DbSet<Models.Friends> Friends { get; set; }
 
+        public DbSet<Models.UserChat> UserChat { get; set; }
         public DbSet<Models.Channels> Channels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,8 +66,21 @@ namespace TalkThroughAPI.Data
                 .WithMany()
                 .HasForeignKey(cu => cu.CommunityId)
                 .OnDelete(DeleteBehavior.NoAction);
-            
-            
+
+            modelBuilder.Entity<UserChat>()
+                .HasKey(uc => new { uc.ChatId,uc.UserId,uc.UserName});
+
+            modelBuilder.Entity<UserChat>()
+                .HasOne(uc => uc.User)
+                .WithMany()
+                .HasForeignKey(cu => cu.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserChat>()
+                .HasOne(uc => uc.Chat)
+                .WithMany()
+                .HasForeignKey(cu => cu.ChatId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

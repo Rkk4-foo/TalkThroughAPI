@@ -12,7 +12,7 @@ using TalkThroughAPI.Data;
 namespace TalkThroughAPI.Migrations
 {
     [DbContext(typeof(TthroughContext))]
-    [Migration("20251109200055_UserChatTable")]
+    [Migration("20251109200300_UserChatTable")]
     partial class UserChatTable
     {
         /// <inheritdoc />

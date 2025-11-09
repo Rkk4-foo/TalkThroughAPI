@@ -9,7 +9,7 @@ namespace TalkThroughAPI.Models
         public string ChatId { get; set; }
         public string ChatName { get; set; }
         public DateTime CreatedAt { get; set; }
-        [Column(TypeName = "varchar2(40)")]
+        [Column(TypeName = "varchar(40)")]
         public string UserId { get; set; }
         public string UserName { get; set; }
 

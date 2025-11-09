@@ -16,7 +16,7 @@ namespace TalkThroughAPI.Migrations
                 columns: table => new
                 {
                     ChatId = table.Column<string>(type: "varchar(40)", nullable: false),
-                    UserId = table.Column<string>(type: "varchar2(40)", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(40)", nullable: false),
                     UserName = table.Column<string>(type: "Varchar(40)", nullable: false),
                     ChatName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)

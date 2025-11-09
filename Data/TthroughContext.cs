@@ -73,7 +73,7 @@ namespace TalkThroughAPI.Data
             modelBuilder.Entity<UserChat>()
                 .HasOne(uc => uc.User)
                 .WithMany()
-                .HasForeignKey(cu => cu.UserId)
+                .HasForeignKey(cu => new { cu.UserId, cu.UserName})
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<UserChat>()

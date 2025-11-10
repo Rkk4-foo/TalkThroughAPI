@@ -3,6 +3,7 @@ using System.Reflection.Metadata.Ecma335;
 using TalkThroughAPI.Data;
 using TalkThroughAPI.DTO;
 using TalkThroughAPI.Models.Common;
+using TalkThroughAPI.Models.Extensions;
 using TalkThroughAPI.Services.Interfaces;
 
 namespace TalkThroughAPI.Services
@@ -65,27 +66,18 @@ namespace TalkThroughAPI.Services
                     ReceiverUsername = userRequest.UserName
                 };
 
-
-
-                _context.Friends.Add(new Models.Friends
+                var friend = new Models.Friends
                 {
                     UserReceiverId = userRequest.Id,
                     UserSenderId = userSender.Id,
                     UserReceiverUsername = userRequest.UserName,
                     UserSenderUsername = userSender.UserName
-                });
+                };
+
+                _context.Friends.Add(friend);
                 await _context.SaveChangesAsync();
 
-                return Result<FriendRequestDTO>.SuccessR(
-                        new FriendRequestDTO
-                        {
-                            UserSenderId = userId,
-                            UserReceiverId = userRequest.Id,
-                            SenderUsername = userSender.UserName,
-                            ReceiverUsername = userRequest.UserName
-                        },
-                        "Friend request sent"
-                    );
+                return Result<FriendRequestDTO>.SuccessR(friend.ToFriendRequestDTO(),"Friend request sent");
             }
         }
 
@@ -106,27 +98,7 @@ namespace TalkThroughAPI.Services
             friendRequest.RequestAccepted = true;
             await _context.SaveChangesAsync();
 
-            return Result<FriendRequestDTO>.SuccessR(
-                    new FriendRequestDTO
-                    {
-                        UserSenderId = friendRequest.UserSenderId,
-                        UserReceiverId = friendRequest.UserReceiverId,
-                        SenderUsername = friendRequest.UserSenderUsername,
-                        ReceiverUsername = friendRequest.UserReceiverUsername
-                    },
-                    "Friend request accepted"
-                );
-
-            return new Result<FriendRequestDTO>(
-                true, 
-                "Request Accepted", 
-                new FriendRequestDTO
-                {
-                    UserSenderId = friendRequest.UserSenderId,
-                    UserReceiverId = friendRequest.UserReceiverId,
-                    SenderUsername = friendRequest.UserSenderUsername,
-                    ReceiverUsername = friendRequest.UserReceiverUsername
-                });
+            return Result<FriendRequestDTO>.SuccessR(friendRequest.ToFriendRequestDTO(),"Friend request accepted");
         }
 
         public async Task<Result<FriendRequestDTO>> DenyFriendRequest(string userId, string username)
@@ -141,16 +113,8 @@ namespace TalkThroughAPI.Services
             _context.Friends.Remove(friendRequest);
             await _context.SaveChangesAsync();
 
-            return new Result<FriendRequestDTO>(
-                true,
-                "Friend request denied",
-                new FriendRequestDTO 
-                {
-                    UserSenderId = friendRequest.UserSenderId,
-                    UserReceiverId = friendRequest.UserReceiverId,
-                    SenderUsername = friendRequest.UserSenderUsername,
-                    ReceiverUsername = friendRequest.UserReceiverUsername
-                });
+            return Result<FriendRequestDTO>.SuccessR(friendRequest.ToFriendRequestDTO(),"Friend request denied");
+
         }
 
         public async Task<Result<FriendDTO>> RemoveFriend(string userId, string username) 
@@ -165,15 +129,7 @@ namespace TalkThroughAPI.Services
             _context.Friends.Remove(friendship);
             await _context.SaveChangesAsync();
 
-            return Result<FriendDTO>.SuccessR(
-                    new FriendDTO 
-                    {
-                        UserId = friendship.UserSenderId == userId ? friendship.UserReceiverId : friendship.UserSenderId,
-                        Username = friendship.UserSenderId == userId ? friendship.UserReceiverUsername : friendship.UserSenderUsername,
-                        UserAvatar = null
-                    },
-                    "Friend removed"
-                );
+            return Result<FriendDTO>.SuccessR( friendship.ToFriendDTO(userId),"Friend removed");
         }
     }
 }

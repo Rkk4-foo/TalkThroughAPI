@@ -4,6 +4,7 @@ using TalkThroughAPI.Data;
 using TalkThroughAPI.DTO;
 using TalkThroughAPI.Models;
 using TalkThroughAPI.Models.Common;
+using TalkThroughAPI.Models.Extensions;
 using TalkThroughAPI.Services.Interfaces;
 
 namespace TalkThroughAPI.Services
@@ -49,7 +50,7 @@ namespace TalkThroughAPI.Services
                 await _context.SaveChangesAsync();
 
 
-                return Result<CreateCommunityDTO>.SuccessR(dto, "Community creation succeded");
+                return Result<CreateCommunityDTO>.SuccessR(communityToCreate.ToCreateCommunityDTO(), "Community creation succeded");
 
             }
             catch (Exception ex) 
@@ -69,7 +70,7 @@ namespace TalkThroughAPI.Services
             _context.Communities.Remove( communityToDelete );
             await _context.SaveChangesAsync();
 
-            return Result<CommunityDTO>.SuccessR(communityDTO,"Community deleted succesfully");
+            return Result<CommunityDTO>.SuccessR(communityToDelete.ToCommunityDTO(),"Community deleted succesfully");
         }
 
 

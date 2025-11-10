@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using TalkThroughAPI.DTO;
 using TalkThroughAPI.Models;
 using TalkThroughAPI.Models.Common;
+using TalkThroughAPI.Models.Extensions;
 using TalkThroughAPI.Services.Interfaces;
 
 
@@ -30,15 +31,7 @@ namespace TalkThroughAPI.Services
             if (user == null)
                 return Result<UserDTO>.Failure("User does not exist", StatusCodes.Status404NotFound);
 
-            return Result<UserDTO>.SuccessR(
-                    new UserDTO
-                    {
-                        UserName = user.UserName,
-                        DisplayName = user.DisplayName,
-                        CreationDate = user.AccountCreationDate,
-                    },
-                    "User found"
-                );
+            return Result<UserDTO>.SuccessR(user.toUserDTO(), "User created successfully");
 
             
         }
@@ -92,15 +85,7 @@ namespace TalkThroughAPI.Services
             
              await _context.SaveChangesAsync();
 
-            return Result<UserDTO>.SuccessR(
-                    new UserDTO
-                    {
-                        UserName = userDTO.UserName,
-                        DisplayName = userDTO.UserName,
-                        CreationDate = DateTime.Now,
-                    },
-                    "User registered"
-                );
+            return Result<UserDTO>.SuccessR(user.toUserDTO(),"User registered correctly");
 
            
         }

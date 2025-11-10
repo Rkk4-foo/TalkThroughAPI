@@ -28,5 +28,7 @@ namespace TalkThroughAPI.Models
             Disconnected = 0
         }
         public string Salt { get; set; }
+
+        public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
     }
 }

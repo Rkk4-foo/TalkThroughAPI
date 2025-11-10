@@ -14,5 +14,7 @@ namespace TalkThroughAPI.Models
         public byte[] ChatPicture { get; set; }
 
         public DateTime ChatCreationDate { get; set; }
+
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
     }
 }

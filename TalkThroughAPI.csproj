@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Extensions\" />
     <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 

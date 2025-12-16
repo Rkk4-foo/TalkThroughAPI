@@ -17,8 +17,8 @@ namespace TalkThroughAPI.Models
         [JsonIgnore]
         [Required]
         [MinLength(60)]
-        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[_-])[a-zA-Z0-9_-]{8,}$",
-        ErrorMessage = "Password must be 8 characters long and contain an score, underscore,")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[_-])(?!.*[A-Z]{2})(?!.*[a-z]{2})(?!.*\d{2})(?!.*[_-]{2})[A-Za-z\d_-]{8,}$",
+        ErrorMessage = "Password must be 8 characters long and contain a number, a letter and a ")]
         public  string Password { get; set; }
         [Column(TypeName = "VARBINARY(MAX)")]
         public byte[]? UserProfilePicture { get; set; }

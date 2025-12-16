@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Transactions;
 using TalkThroughAPI.Data;
 using TalkThroughAPI.DTO;
+using TalkThroughAPI.Models;
 using TalkThroughAPI.Models.Common;
 using TalkThroughAPI.Services.Interfaces;
 
@@ -34,11 +36,30 @@ namespace TalkThroughAPI.Services
         
         public async Task<Result<ChatDTO>> CreateChat(string currentUserId, CreateChatDTO create)
         {
-            var userIds = create.UserIds.Distinct().ToList();
+            var userIds = create.UserIds.Select(u => u.Id).Distinct().ToList();
 
             if (!userIds.Contains(currentUserId))
                 userIds.Add(currentUserId);
 
+            var users = await _context.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToListAsync();
+
+            if (users.Count != userIds.Count)
+                return Result<ChatDTO>.Failure(
+                    "Some users do not exist in DB",
+                    StatusCodes.Status400BadRequest,
+                    "USER_NON_EXISTANT"
+                );
+
+            if (users.Count > 2)
+            {
+                var chat = new Chat
+                {
+                    ChatId = Guid.NewGuid().ToString(),
+                    
+                };
+            }
         }
     }
 }

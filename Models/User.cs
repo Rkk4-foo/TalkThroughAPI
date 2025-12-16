@@ -15,6 +15,7 @@ namespace TalkThroughAPI.Models
         public required string UserName { get; set; }
         public string? DisplayName { get; set; }
         [JsonIgnore]
+
         public  string Password { get; set; }
         [Column(TypeName = "VARBINARY(MAX)")]
         public byte[]? UserProfilePicture { get; set; }
@@ -27,6 +28,7 @@ namespace TalkThroughAPI.Models
             DoNotDisturb = 3,
             Disconnected = 0
         }
+        [JsonIgnore]
         public string Salt { get; set; }
 
         public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();

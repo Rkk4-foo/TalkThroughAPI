@@ -27,30 +27,27 @@ namespace TalkThroughAPI.Data
                 .IsUnique();
 
             modelBuilder.Entity<Friends>()
-                .HasKey(f => new { f.UserSenderId, f.UserReceiverId, f.UserSenderUsername, f.UserReceiverUsername });
+                .HasKey(f => new { f.UserSenderId, f.UserReceiverId });
 
             modelBuilder.Entity<Friends>()
                 .HasOne(f => f.UserSender)
                 .WithMany()
-                .HasForeignKey(f => new { f.UserSenderId, f.UserSenderUsername })
-                .HasPrincipalKey(us => new { us.Id, us.UserName })
+                .HasForeignKey(f => f.UserSenderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Friends>()
                 .HasOne(f => f.UserReceiver)
                 .WithMany()
-                .HasForeignKey(f => new { f.UserReceiverId,f.UserReceiverUsername })
-                .HasPrincipalKey(ur => new { ur.Id, ur.UserName})
+                .HasForeignKey(f => f.UserReceiverId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<CommunitiesUsers>()
-                .HasKey(cus => new { cus.UserId, cus.UserName, cus.CommunityId });
+                .HasKey(cu => new { cu.UserId, cu.CommunityId });
 
             modelBuilder.Entity<CommunitiesUsers>()
                 .HasOne(cu => cu.User)
                 .WithMany()
-                .HasForeignKey(cu => new { cu.UserId, cu.UserName })
-                .HasPrincipalKey(u => new { u.Id, u.UserName })
+                .HasForeignKey(cu => cu.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<CommunitiesUsers>()
@@ -60,18 +57,18 @@ namespace TalkThroughAPI.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<UserChat>()
-                .HasKey(uc => new { uc.ChatId,uc.UserId,uc.UserName});
+                .HasKey(uc => new { uc.ChatId, uc.UserId });
 
             modelBuilder.Entity<UserChat>()
                 .HasOne(uc => uc.User)
                 .WithMany()
-                .HasForeignKey(cu => new { cu.UserId, cu.UserName})
+                .HasForeignKey(uc => uc.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<UserChat>()
                 .HasOne(uc => uc.Chat)
                 .WithMany()
-                .HasForeignKey(cu => cu.ChatId)
+                .HasForeignKey(uc => uc.ChatId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

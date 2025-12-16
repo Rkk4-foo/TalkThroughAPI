@@ -18,7 +18,7 @@ namespace TalkThroughAPI.Services
     public class ChatService : IChatService
     {
         private readonly TthroughContext _context;
-        public ChatService(TthroughContext context) 
+        public ChatService(TthroughContext context)
         {
             _context = context;
         }
@@ -33,33 +33,38 @@ namespace TalkThroughAPI.Services
         /// <param name="currentUserId">Current user id provided by the token.</param>
         /// <param name="create">List of users that participate in the chat and chat name.</param>
         /// <returns>Chat information and StatusCode of the request encapsulated on a return record.</returns>
-        
-        public async Task<Result<ChatDTO>> CreateChat(string currentUserId, CreateChatDTO create)
+
+        public async Task<Result<ChatDTO>> CreateChat(String currentUserId, CreateChatDTO create) 
         {
-            var userIds = create.UserIds.Select(u => u.Id).Distinct().ToList();
-
-            if (!userIds.Contains(currentUserId))
-                userIds.Add(currentUserId);
-
-            var users = await _context.Users
-                .Where(u => userIds.Contains(u.Id))
-                .ToListAsync();
-
-            if (users.Count != userIds.Count)
-                return Result<ChatDTO>.Failure(
-                    "Some users do not exist in DB",
-                    StatusCodes.Status400BadRequest,
-                    "USER_NON_EXISTANT"
-                );
-
-            if (users.Count > 2)
-            {
-                var chat = new Chat
-                {
-                    ChatId = Guid.NewGuid().ToString(),
-                    
-                };
-            }
+            throw new NotImplementedException();
         }
+
+        //public async Task<Result<ChatDTO>> CreateChat(string currentUserId, CreateChatDTO create)
+        //{
+        //    var userIds = create.UserIds.Select(u => u.Id).Distinct().ToList();
+
+        //    if (!userIds.Contains(currentUserId))
+        //        userIds.Add(currentUserId);
+
+        //    var users = await _context.Users
+        //        .Where(u => userIds.Contains(u.Id))
+        //        .ToListAsync();
+
+        //    if (users.Count != userIds.Count)
+        //        return Result<ChatDTO>.Failure(
+        //            "Some users do not exist in DB",
+        //            StatusCodes.Status400BadRequest,
+        //            "USER_NON_EXISTANT"
+        //        );
+
+        //    if (users.Count > 2)
+        //    {
+        //        var chat = new Chat
+        //        {
+        //            ChatId = Guid.NewGuid().ToString(),
+
+        //        };
+        //    }
+
     }
 }

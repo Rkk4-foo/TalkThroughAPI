@@ -14,14 +14,5 @@ namespace TalkThroughAPI.Models.Extensions
                 DisplayName = user.DisplayName
             };
         }
-
-        public static LoginRegisterUserDTO toLoginRegisterDTO(this User user) 
-        {
-            return new LoginRegisterUserDTO 
-            {
-                UserName = user.UserName,
-                Password = user.Password,
-            };
-        }
     }
 }

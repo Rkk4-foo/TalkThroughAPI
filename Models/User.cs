@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace TalkThroughAPI.Models
 {
-    [PrimaryKey(nameof(Id),nameof(UserName))]
+    [PrimaryKey(nameof(Id))]
     public class User
     {
         [Column(TypeName = "Varchar(40)")]

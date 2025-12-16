@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
-using TalkThroughAPI.Migrations;
+
 
 namespace TalkThroughAPI.Models
 {

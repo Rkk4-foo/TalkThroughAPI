@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TalkThroughAPI.DTO;
-using TalkThroughAPI.Migrations;
+
 using TalkThroughAPI.Services.Interfaces;
 
 namespace TalkThroughAPI.Controller

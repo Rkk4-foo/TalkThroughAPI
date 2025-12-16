@@ -42,10 +42,6 @@ namespace TalkThroughAPI.Services
             if (user == null || !VerifyPassword(dto.Password, user.Password, user.Salt))
                 return Result<UserDTO>.Failure("Wrong username or password", default, "ACC_NOT_FOUND");
 
-            //    return new Result<User>(false, "Wrong username or password",null, StatusCodes.Status400BadRequest);
-
-            //return new Result<User>(true, "",user);
-
             return Result<UserDTO>.SuccessR(
                     
                     new UserDTO 

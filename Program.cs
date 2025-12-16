@@ -23,7 +23,7 @@ builder.Environment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), 
 builder.Services.AddDbContext<TthroughContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TalkthroughDatabase")));
 
-builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddSwaggerGen(c =>
 {

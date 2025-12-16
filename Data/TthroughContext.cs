@@ -22,17 +22,9 @@ namespace TalkThroughAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Friends>()
-            //    .HasOne(f => f.UserSender)
-            //    .WithMany() 
-            //    .HasForeignKey(f => f.UserSenderId)
-            //    .OnDelete(DeleteBehavior.Restrict); 
-
-            //modelBuilder.Entity<Friends>()
-            //    .HasOne(f => f.UserReceiver)
-            //    .WithMany() 
-            //    .HasForeignKey(f => f.UserReceiverId)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserName)
+                .IsUnique();
 
             modelBuilder.Entity<Friends>()
                 .HasKey(f => new { f.UserSenderId, f.UserReceiverId, f.UserSenderUsername, f.UserReceiverUsername });

@@ -30,11 +30,14 @@ namespace TalkThroughAPI.Migrations
                     b.Property<string>("UsersId")
                         .HasColumnType("Varchar(40)");
 
-                    b.HasKey("ChatsChatId", "UsersId");
+                    b.Property<string>("UsersUserName")
+                        .HasColumnType("Varchar(40)");
 
-                    b.HasIndex("UsersId");
+                    b.HasKey("ChatsChatId", "UsersId", "UsersUserName");
 
-                    b.ToTable("ChatUser");
+                    b.HasIndex("UsersId", "UsersUserName");
+
+                    b.ToTable("ChatUser", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.Channels", b =>
@@ -56,7 +59,7 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("Channels");
+                    b.ToTable("Channels", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.Chat", b =>
@@ -77,7 +80,7 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasKey("ChatId");
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chats", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.Communities", b =>
@@ -97,12 +100,15 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasKey("CommunityId");
 
-                    b.ToTable("Communities");
+                    b.ToTable("Communities", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.CommunitiesUsers", b =>
                 {
                     b.Property<string>("UserId")
+                        .HasColumnType("Varchar(40)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("Varchar(40)");
 
                     b.Property<string>("CommunityId")
@@ -111,14 +117,11 @@ namespace TalkThroughAPI.Migrations
                     b.Property<bool>("UserIsAdmin")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("Varchar(40)");
-
-                    b.HasKey("UserId", "CommunityId");
+                    b.HasKey("UserId", "UserName", "CommunityId");
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("CommunitiesUsers");
+                    b.ToTable("CommunitiesUsers", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.Friends", b =>
@@ -129,22 +132,22 @@ namespace TalkThroughAPI.Migrations
                     b.Property<string>("UserReceiverId")
                         .HasColumnType("Varchar(40)");
 
+                    b.Property<string>("UserSenderUsername")
+                        .HasColumnType("Varchar(40)");
+
+                    b.Property<string>("UserReceiverUsername")
+                        .HasColumnType("Varchar(40)");
+
                     b.Property<bool>("RequestAccepted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserReceiverUsername")
-                        .IsRequired()
-                        .HasColumnType("Varchar(40)");
+                    b.HasKey("UserSenderId", "UserReceiverId", "UserSenderUsername", "UserReceiverUsername");
 
-                    b.Property<string>("UserSenderUsername")
-                        .IsRequired()
-                        .HasColumnType("Varchar(40)");
+                    b.HasIndex("UserReceiverId", "UserReceiverUsername");
 
-                    b.HasKey("UserSenderId", "UserReceiverId");
+                    b.HasIndex("UserSenderId", "UserSenderUsername");
 
-                    b.HasIndex("UserReceiverId");
-
-                    b.ToTable("Friends");
+                    b.ToTable("Friends", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.Messages", b =>
@@ -162,7 +165,9 @@ namespace TalkThroughAPI.Migrations
                         .HasColumnType("Varchar(40)");
 
                     b.Property<string>("SenderId")
-                        .IsRequired()
+                        .HasColumnType("Varchar(40)");
+
+                    b.Property<string>("SenderUserName")
                         .HasColumnType("Varchar(40)");
 
                     b.Property<DateTime>("SentAt")
@@ -172,16 +177,19 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.HasIndex("SenderId");
-
                     b.HasIndex("ChannelId", "ChannelCommunityId");
 
-                    b.ToTable("Messages");
+                    b.HasIndex("SenderId", "SenderUserName");
+
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.User", b =>
                 {
                     b.Property<string>("Id")
+                        .HasColumnType("Varchar(40)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("Varchar(40)");
 
                     b.Property<DateTime>("AccountCreationDate")
@@ -201,19 +209,12 @@ namespace TalkThroughAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("Varchar(40)");
-
                     b.Property<byte[]>("UserProfilePicture")
                         .HasColumnType("VARBINARY(MAX)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id", "UserName");
 
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TalkThroughAPI.Models.UserChat", b =>
@@ -224,6 +225,9 @@ namespace TalkThroughAPI.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(40)");
 
+                    b.Property<string>("UserName")
+                        .HasColumnType("Varchar(40)");
+
                     b.Property<string>("ChatName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -231,15 +235,11 @@ namespace TalkThroughAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("ChatId", "UserId", "UserName");
 
-                    b.HasKey("ChatId", "UserId");
+                    b.HasIndex("UserId", "UserName");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserChat");
+                    b.ToTable("UserChat", (string)null);
                 });
 
             modelBuilder.Entity("ChatUser", b =>
@@ -252,7 +252,7 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasOne("TalkThroughAPI.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UsersId", "UsersUserName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -278,7 +278,7 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasOne("TalkThroughAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId", "UserName")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -291,13 +291,13 @@ namespace TalkThroughAPI.Migrations
                 {
                     b.HasOne("TalkThroughAPI.Models.User", "UserReceiver")
                         .WithMany()
-                        .HasForeignKey("UserReceiverId")
+                        .HasForeignKey("UserReceiverId", "UserReceiverUsername")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TalkThroughAPI.Models.User", "UserSender")
                         .WithMany()
-                        .HasForeignKey("UserSenderId")
+                        .HasForeignKey("UserSenderId", "UserSenderUsername")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -312,15 +312,13 @@ namespace TalkThroughAPI.Migrations
                         .WithMany()
                         .HasForeignKey("ChatId");
 
-                    b.HasOne("TalkThroughAPI.Models.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TalkThroughAPI.Models.Channels", "Channel")
                         .WithMany("messages")
                         .HasForeignKey("ChannelId", "ChannelCommunityId");
+
+                    b.HasOne("TalkThroughAPI.Models.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId", "SenderUserName");
 
                     b.Navigation("Channel");
 
@@ -339,7 +337,7 @@ namespace TalkThroughAPI.Migrations
 
                     b.HasOne("TalkThroughAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId", "UserName")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

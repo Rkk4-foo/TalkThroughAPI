@@ -15,7 +15,10 @@ namespace TalkThroughAPI.Models
         public required string UserName { get; set; }
         public string? DisplayName { get; set; }
         [JsonIgnore]
-
+        [Required]
+        [MinLength(60)]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[_-])[a-zA-Z0-9_-]{8,}$",
+        ErrorMessage = "Password must be 8 characters long and contain an score, underscore,")]
         public  string Password { get; set; }
         [Column(TypeName = "VARBINARY(MAX)")]
         public byte[]? UserProfilePicture { get; set; }
@@ -29,6 +32,8 @@ namespace TalkThroughAPI.Models
             Disconnected = 0
         }
         [JsonIgnore]
+        [Required]
+        [MinLength(16)]
         public string Salt { get; set; }
 
         public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();

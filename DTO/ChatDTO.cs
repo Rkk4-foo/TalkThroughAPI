@@ -17,4 +17,10 @@ namespace TalkThroughAPI.DTO
 
         public List<User> UserIds { get; set; }
     }
+
+    public class SelectedChatDTO 
+    {
+        public string ChatId { get; set; }
+        public List<User> UserIds { get; set; }
+    }
 }

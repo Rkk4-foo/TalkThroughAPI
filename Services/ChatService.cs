@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Transactions;
 using TalkThroughAPI.Data;
@@ -98,6 +99,47 @@ namespace TalkThroughAPI.Services
                     "Chat created successfully",
                     default
                 );
+        }
+
+        public async Task<Result<SelectedChatDTO>> DeleteChat(string currentUserId, SelectedChatDTO delete) 
+        {
+            var userIds = delete.UserIds.Select(u => u.Id).Distinct().ToList();
+
+            if (!userIds.Contains(currentUserId))
+                userIds.Add(currentUserId);
+
+            var users = await _context.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToListAsync();
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                foreach (var user in users)
+                {
+                    var RegisterToDelete = await _context.UserChat.FirstOrDefaultAsync(u => u.UserId == user.Id);
+                    if (RegisterToDelete == null)
+                        return Result<SelectedChatDTO>.Failure("Couldn't find user in chat", default, "USR_NOT_FOUND");
+
+                    _context.UserChat.Remove(RegisterToDelete);
+                }
+                var ChatRegister = await _context.Chats.FirstOrDefaultAsync(c => c.ChatId == delete.ChatId);
+                if(ChatRegister == null)
+                    return Result<SelectedChatDTO>.Failure("Couldn't find chat to delete", default, "CHAT_NOT_FOUND");
+
+                _context.Chats.Remove(ChatRegister);
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return Result<SelectedChatDTO>.Failure(ex.Message, StatusCodes.Status400BadRequest,"TRANSACTION_FAILED");
+            }
+            
+           return Result<SelectedChatDTO>.SuccessR(delete, "Chat deleted successfully", default);
+            
         }
 
     }

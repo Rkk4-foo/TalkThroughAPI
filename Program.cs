@@ -24,7 +24,8 @@ builder.Services.AddDbContext<TthroughContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TalkthroughDatabase")));
 
 builder.Services.AddScoped<IJwtService, JwtService>();
-
+builder.Services.AddScoped<ICommunityService, CommunityService>();
+builder.Services.AddScoped<ICommunityUserService, CommunityUserService>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

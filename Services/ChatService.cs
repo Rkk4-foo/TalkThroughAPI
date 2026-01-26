@@ -142,5 +142,9 @@ namespace TalkThroughAPI.Services
             
         }
 
+        public Task<Result<SelectedChatDTO>> DeleteChat(string currentUserId, ChatDTO delete)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -49,7 +49,7 @@ namespace TalkThroughAPI.Controller
         /// <returns>Status of the user after the request</returns>
         [Authorize]
         [HttpPut("Add-Admin")]
-        public async Task<IActionResult> PutAdminInCommunity([FromBody] UserDTO userToPromote, CommunityDTO comm)
+        public async Task<IActionResult> PutAdminInCommunity([FromQuery] UserDTO userToPromote, CommunityDTO comm)
         {
             
 
@@ -71,7 +71,7 @@ namespace TalkThroughAPI.Controller
         /// <returns>Information from the request</returns>
         [Authorize]
         [HttpPost("Add-User")]
-        public async Task<IActionResult> PostUserInCommunity([FromBody] UserDTO userToAdd, CommunityDTO comm)
+        public async Task<IActionResult> PostUserInCommunity([FromQuery] UserDTO userToAdd, CommunityDTO comm)
         {
             
             if (_userId == null)
@@ -92,7 +92,7 @@ namespace TalkThroughAPI.Controller
         /// <returns>Status code in the request and all the data from the encapsulated result</returns>
         [Authorize]
         [HttpDelete("Remove-User")]
-        public async Task<IActionResult> DeleteUserCommunity([FromBody] CommunityDTO comm, UserDTO userToRemove) 
+        public async Task<IActionResult> DeleteUserCommunity([FromQuery] CommunityDTO comm, UserDTO userToRemove) 
         {
             if (_userId == null) 
                 return NotFound();
@@ -112,7 +112,7 @@ namespace TalkThroughAPI.Controller
         /// <returns>Status of the request and status of the community and the user after the request</returns>
         [Authorize]
         [HttpPut("demote-user")]
-        public async Task<IActionResult> DemoteUser([FromBody] CommunityDTO community,UserDTO user) 
+        public async Task<IActionResult> DemoteUser([FromQuery] CommunityDTO community,UserDTO user) 
         {
            if(_userId==null)
                 return NotFound();

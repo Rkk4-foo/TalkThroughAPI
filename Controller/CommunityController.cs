@@ -7,7 +7,7 @@ namespace TalkThroughAPI.Controller
 {
 
     [ApiController]
-    [Route("{controller}/Communities")]
+    [Route("api/Communities")]
     public class CommunityController : ControllerBase
     {
         private readonly ICommunityService _communityService;

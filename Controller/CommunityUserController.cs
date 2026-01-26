@@ -8,7 +8,7 @@ using TalkThroughAPI.Services.Interfaces;
 namespace TalkThroughAPI.Controller
 {
     [ApiController]
-    [Route("{controller}/Community-Management")]
+    [Route("Community/Community-Management")]
     public class CommunityUserController : ControllerBase
     {
         private readonly ICommunityUserService _communityUserService;

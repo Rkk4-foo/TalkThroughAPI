@@ -14,5 +14,7 @@ namespace TalkThroughAPI.Services.Interfaces
         public Task<Result<CommunityUserDTO>> AddUserToCommunity(string userId, CommunityDTO community, UserDTO userToAdd);
 
         public Task<Result<CommunityUserDTO>> RemoveUserFromCommunity(string userId, CommunityDTO community, UserDTO userToRemove);
+
+        public Task<Result<CommunityUserDTO>> JoinCommunity(string userId, string communityId);
     }
 }

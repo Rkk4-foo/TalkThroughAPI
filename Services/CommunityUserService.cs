@@ -76,6 +76,41 @@ namespace TalkThroughAPI.Services
             );
         }
 
+        public async Task<Result<CommunityUserDTO>> JoinCommunity(string userId, string communityId)
+        {
+            var userJoining = await _context.Users.FindAsync(userId);
+            if (userJoining == null)
+                return Result<CommunityUserDTO>.Failure("Couldn't find requested user", StatusCodes.Status404NotFound, "USER_NOT_FOUND");
+
+            var commToJoin = await _context.Communities.FindAsync(communityId);
+            if (commToJoin == null)
+                return Result<CommunityUserDTO>.Failure("Couldn't find requested community", StatusCodes.Status404NotFound, "COMM_NOT_FOUND");
+
+            var modelToInsert = new CommunitiesUsers 
+            {
+                CommunityId = communityId,
+                UserId = userId,
+                UserIsAdmin = false
+            };
+
+            await _context.CommunitiesUsers.AddAsync(modelToInsert);
+            await _context.SaveChangesAsync();
+
+            return Result<CommunityUserDTO>.SuccessR
+                (
+                new CommunityUserDTO 
+                {
+                    CommunityId = communityId,
+                    UserId = userId,
+                    CommunityName = commToJoin.CommunityName,
+                    Username = userJoining.UserName
+                },
+                "Congratulations! Welcome to" + commToJoin.CommunityName
+
+                );
+
+        }
+
         public async Task<Result<CommunityUserDTO>> RemoveAdminFromCommunity(string userId, CommunityDTO community, UserDTO userToDemote)
         {
             var commUserConnectedIsAdmin = await UserIsAdmin(userId, community);

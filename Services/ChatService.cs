@@ -141,10 +141,5 @@ namespace TalkThroughAPI.Services
            return Result<SelectedChatDTO>.SuccessR(delete, "Chat deleted successfully", default);
             
         }
-
-        public Task<Result<SelectedChatDTO>> DeleteChat(string currentUserId, ChatDTO delete)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

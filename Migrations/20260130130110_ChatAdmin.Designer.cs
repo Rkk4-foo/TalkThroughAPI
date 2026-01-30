@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TalkThroughAPI.Data;
 
@@ -11,9 +12,11 @@ using TalkThroughAPI.Data;
 namespace TalkThroughAPI.Migrations
 {
     [DbContext(typeof(TthroughContext))]
-    partial class TthroughContextModelSnapshot : ModelSnapshot
+    [Migration("20260130130110_ChatAdmin")]
+    partial class ChatAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +77,9 @@ namespace TalkThroughAPI.Migrations
                     b.Property<byte[]>("ChatPicture")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.HasKey("ChatId");
 
@@ -230,9 +236,6 @@ namespace TalkThroughAPI.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .IsRequired()

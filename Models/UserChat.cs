@@ -13,6 +13,8 @@ namespace TalkThroughAPI.Models
         public string UserId { get; set; }
         public string UserName { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public Chat Chat { get; set; }
 
         public User User { get; set; }

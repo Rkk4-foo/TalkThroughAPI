@@ -17,6 +17,5 @@ namespace TalkThroughAPI.Models
 
         public virtual ICollection<User> Users { get; set; } = new List<User>();
 
-        public bool IsAdmin { get; set; }
     }
 }

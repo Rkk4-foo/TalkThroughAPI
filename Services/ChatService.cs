@@ -6,6 +6,7 @@ using TalkThroughAPI.Data;
 using TalkThroughAPI.DTO;
 using TalkThroughAPI.Models;
 using TalkThroughAPI.Models.Common;
+using TalkThroughAPI.Models.Extensions;
 using TalkThroughAPI.Services.Interfaces;
 
 namespace TalkThroughAPI.Services
@@ -101,9 +102,44 @@ namespace TalkThroughAPI.Services
                 );
         }
 
-        public Task<Result<ChatDTO>> DeleteChat(string currentUserId, DeleteChatDTO delete)
+        public async Task<Result<ChatDTO>> DeleteChat(string currentUserId, DeleteChatDTO delete)
         {
-            throw new NotImplementedException();
+            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.ChatId == delete.ChatId);
+            if (chat == null)
+                return Result<ChatDTO>.Failure("Chat doesn't exist. Possible inconsistency between cache and DB", StatusCodes.Status404NotFound, "CHAT_NOT_FOUND");
+
+            var relation = await _context.UserChat.FirstOrDefaultAsync(c => c.UserId == currentUserId && c.ChatId == chat.ChatId);
+            if(relation == null)
+                return Result<ChatDTO>.Failure("User not in chat", StatusCodes.Status404NotFound, "USER_CHAT_NOT_FOUND");
+
+            var allMembers = await _context.UserChat
+                .Where(uc => uc.ChatId == chat.ChatId)
+                .ToListAsync();
+
+            if (allMembers.Count() > 2) 
+            {
+                if (relation.IsAdmin) 
+                {
+                    var otherAdmins = allMembers.Where(u => u.IsAdmin && u.UserId != currentUserId).ToList();
+
+                    if (!otherAdmins.Any())
+                    {
+                        _context.UserChat.RemoveRange(allMembers);
+                        _context.Chats.Remove(chat);
+                    }
+                    else 
+                    {
+                        _context.UserChat.Remove(relation);
+                    }
+                }
+            }
+            else 
+            {
+                _context.UserChat.Remove(relation);
+            }
+            await _context.SaveChangesAsync();
+
+                return Result<ChatDTO>.SuccessR(chat.toChatDTO(), "Chat deleted successfully");
         }
 
         public Task<Result<ChatDTO>> LeaveChat(string currentUserId, LeaveChatDTO leave)

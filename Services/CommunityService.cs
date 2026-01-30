@@ -268,7 +268,7 @@ namespace TalkThroughAPI.Services
         }
 
         
-    }
+    
 
 
         private List<Channels> CreateDefaultChannels(string communityId)

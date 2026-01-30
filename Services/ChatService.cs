@@ -101,6 +101,16 @@ namespace TalkThroughAPI.Services
                 );
         }
 
+        public Task<Result<ChatDTO>> DeleteChat(string currentUserId, DeleteChatDTO delete)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<ChatDTO>> LeaveChat(string currentUserId, LeaveChatDTO leave)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Result<ModifiedChatDTO>> ModifyChat(string currentUserId, ModifiedChatDTO modify)
         {
             throw new NotImplementedException();

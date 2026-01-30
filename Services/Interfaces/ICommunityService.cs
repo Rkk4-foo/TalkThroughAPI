@@ -20,4 +20,4 @@ namespace TalkThroughAPI.Services.Interfaces
         public Task<Result<CommunityUserDTO>> JoinCommunity(string userId, string communityId);
     }
 }
-}
+

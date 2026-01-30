@@ -1,4 +1,5 @@
-﻿using TalkThroughAPI.Models;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using TalkThroughAPI.Models;
 
 namespace TalkThroughAPI.DTO
 {
@@ -18,9 +19,25 @@ namespace TalkThroughAPI.DTO
         public List<User> UserIds { get; set; }
     }
 
-    public class SelectedChatDTO 
+
+    public class  LeaveChatDTO
+    {
+        public string ChatId{ get; set; }
+
+        public List<User> UserIds { get; set; }
+    }
+
+    public class DeleteChatDTO 
     {
         public string ChatId { get; set; }
+
         public List<User> UserIds { get; set; }
+    }
+
+    public class ModifiedChatDTO 
+    {
+        public string ChatId { get; set; }
+
+        public string NewChatName { get; set; }
     }
 }
